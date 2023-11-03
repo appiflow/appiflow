@@ -1,5 +1,8 @@
 from  dto import rule_dto
 from template import rule_handler as rh
+from util import logger
+
+log = logger.get_logger(__name__)
 
 class CreateFileRuleHandler(rh.RuleHandler):
     def __init__(self) -> None:
@@ -11,4 +14,4 @@ class CreateFileRuleHandler(rh.RuleHandler):
         Args:
             rule (Rule): Rule object dto
         """
-        print('in create')
+        log.debug('in create file handle')
