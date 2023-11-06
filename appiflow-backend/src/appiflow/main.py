@@ -1,5 +1,6 @@
 from template import rule_handler as rh
 from template import create_file_rule_handler as crh
+from template import copy_all_files_rule_handler as cparh
 from dto import rule_dto
 
 def main():
