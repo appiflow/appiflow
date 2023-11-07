@@ -6,10 +6,16 @@ from util import logger
 
 log = logger.get_logger(__name__)
 
+"""
+    Class to handle multiple files copy
+"""
 class CopyAllFilesRuleHandler(rh.RuleHandler):
     def init():
         super()
         
+    """
+    Handler to copy multiple files to destination 
+    """
     def handle(self, rule: rule_dto.Rule) -> None:
         source_directory:str = "/home/hemanth/Desktop/Temp"
         destination_directory:str ="/home/hemanth/Desktop/Temp1"

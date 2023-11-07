@@ -6,10 +6,16 @@ from util import logger
 
 log = logger.get_logger(__name__)
 
+"""
+Class to handle single file copy
+"""
 class CopyFileRuleHandler(rh.RuleHandler):
     def init():
         super()
         
+    """
+        Handler to copy single file to destination 
+    """
     def handle(self, rule: rule_dto.Rule) -> None:
         source_path:str = "/home/hemanth/Desktop/brt.py"
         destination_path:str ="/home/hemanth/Desktop/brt1.py"
