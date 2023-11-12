@@ -15,5 +15,9 @@ class CreateFileRuleHandler(rh.RuleHandler):
         Args:
             rule (Rule): Rule object dto
         """
-        log.debug('in create file handle')
-        template_engine.apply_template2()
+        log.debug('in create file handle ->')
+        #TODO
+        map = {"name": "Order",  "score": 90}
+        content : str = template_engine.apply_template("message.java","templates/",map)
+        log.info("output content")
+        log.info(content)
