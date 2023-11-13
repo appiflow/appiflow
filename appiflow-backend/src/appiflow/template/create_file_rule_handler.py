@@ -9,15 +9,13 @@ class CreateFileRuleHandler(rh.RuleHandler):
     def __init__(self) -> None:
         super()
     
-    def handle(self, rule : rule_dto.Rule) -> None:
+    def handle(self, rule : rule_dto.Rule, param_map : dict) -> None:
         """Handles the CREATEFILE Rule.
 
         Args:
             rule (Rule): Rule object dto
         """
         log.debug('in create file handle ->')
-        #TODO
-        map = {"name": "Order",  "score": 90}
-        content : str = template_engine.apply_template("message.java","templates/",map)
+        content : str = template_engine.apply_template(rule.source_name, rule.source_location, param_map)
         log.info("output content")
         log.info(content)

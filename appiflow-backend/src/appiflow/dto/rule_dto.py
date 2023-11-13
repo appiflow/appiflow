@@ -5,8 +5,12 @@ from types import SimpleNamespace as Namespace
 class Rule:
     """DTO Class to represent a Rule.  
     """
-    def __init__(self, name, source_location, target_location, target_name) -> None:
-        self.name, self.source_location, self.target_location, self.target_name = name, source_location, target_location, target_name
+    def __init__(self, name, source_name, source_location, target_location, target_name) -> None:
+        self.name = name
+        self.source_name = source_name
+        self.source_location = source_location
+        self.target_location = target_location
+        self.target_name = target_name
     
     
     def from_json(self, rule_json : str) -> 'Rule':

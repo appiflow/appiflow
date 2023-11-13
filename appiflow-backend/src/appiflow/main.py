@@ -3,13 +3,14 @@ from template import create_file_rule_handler as crh
 from dto import rule_dto
 
 def main():
-    rule = rule_dto.Rule('a', 'b', 'c', 'd')
+    rule = rule_dto.Rule('test_rule', 'message.java', 'templates', 'output/', 'result.java')
     create_file_handler = crh.CreateFileRuleHandler()
-    create_file_handler.handle(rule)
+    map = {"name": "Order",  "score": 90}
+    create_file_handler.handle(rule, map)
     
 
 def test_json_objects():
-    rule = rule_dto.Rule('a', 'b', 'c', 'd')
+    rule = rule_dto.Rule('a', 'b', 'c', 'd', 'e')
     print("rule json: ")
     a = rule.to_json()
     print(a)
