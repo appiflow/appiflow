@@ -13,18 +13,22 @@ class CopyFileRuleHandler(rh.RuleHandler):
     def init():
         super()
         
-    """
-        Handler to copy single file to destination 
-    """
     def handle(self, rule: rule_dto.Rule) -> None:
+        """
+        Handler to copy single file to destination 
+        Args: 
+            rule (Rule): Rule object dto
+        """
+        
+        # TODO: Replace static file paths with dynamic paths from rule
         source_path:str = "/home/hemanth/Desktop/brt.py"
         destination_path:str ="/home/hemanth/Desktop/brt1.py"
         try:
             shutil.copy(source_path, destination_path)
-            print(f"File copied from {source_path} to {destination_path}")
+            log.info(f"File copied from {source_path} to {destination_path}")
         except FileNotFoundError:
-            print(f"Source file '{source_path}' not found.")
+            log.error(f"Source file '{source_path}' not found.")
         except PermissionError:
-            print(f"Permission denied to copy file.")
+            log.error(f"Permission denied to copy file.")
         except Exception as e:
-            print(f"An error occurred: {str(e)}")
+            log.error(f"An error occurred: {str(e)}")
