@@ -1,7 +1,7 @@
-from template import rule_handler as rh
-from  dto import rule_dto
+from core.template import rule_handler as rh
+from core.dto import rule_dto
 import shutil
-from util import logger
+from core.util import logger
 
 
 log = logger.get_logger(__name__)

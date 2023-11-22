@@ -1,6 +1,6 @@
-from copy_all_files_rule_handler import CopyAllFilesRuleHandler
-from copy_file_rule_handler import CopyFileRuleHandler
-from constants import Constants
+from core.template.copy_all_files_rule_handler import CopyAllFilesRuleHandler
+from core.template.copy_file_rule_handler import CopyFileRuleHandler
+from util.constants import Constants
 
 
 class RuleHandlerFactory:
