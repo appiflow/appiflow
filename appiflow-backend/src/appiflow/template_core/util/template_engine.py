@@ -1,6 +1,6 @@
 import jinja2
 from jinja2 import Environment, FileSystemLoader
-from core.util import logger
+from template_core.util import logger
 
 log = logger.get_logger(__name__)
    

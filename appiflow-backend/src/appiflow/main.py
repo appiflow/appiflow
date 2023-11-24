@@ -1,7 +1,7 @@
-from core.template import rule_handler as rh
-from core.template import create_file_rule_handler as crh
-from core.template import copy_all_files_rule_handler as cparh
-from core.dto import rule_dto
+from template_core.template import rule_handler as rh
+from template_core.template import create_file_rule_handler as crh
+from template_core.template import copy_all_files_rule_handler as cparh
+from template_core.dto import rule_dto
 
 def main():
     rule = rule_dto.Rule('test_rule', 'message.java', 'core/templates', 'output/', 'result.java')

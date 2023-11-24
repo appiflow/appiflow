@@ -1,4 +1,4 @@
-from core.dto import rule_dto
+from template_core.dto import rule_dto
 from abc import ABC
 
 class RuleHandler(ABC):

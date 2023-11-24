@@ -1,5 +1,5 @@
-from core.template.copy_all_files_rule_handler import CopyAllFilesRuleHandler
-from core.template.copy_file_rule_handler import CopyFileRuleHandler
+from template_core.template.copy_all_files_rule_handler import CopyAllFilesRuleHandler
+from template_core.template.copy_file_rule_handler import CopyFileRuleHandler
 from util.constants import Constants
 
 
