@@ -1,12 +1,14 @@
 from template_core.template.copy_all_files_rule_handler import CopyAllFilesRuleHandler
 from template_core.template.copy_file_rule_handler import CopyFileRuleHandler
+from template_core.template.create_folder_rule_handler import CreateFolderRuleHandler
 from util.constants import Constants
 
 
 class RuleHandlerFactory:
     RULES_MAPPING = {
-        Constants.COPY_SINGLE_FILE: CopyFileRuleHandler,
-        Constants.COPY_ALL_FILES: CopyAllFilesRuleHandler,
+        Constants.COPY_SINGLE_FILE : CopyFileRuleHandler,
+        Constants.COPY_ALL_FILES : CopyAllFilesRuleHandler,
+        Constants.CREATE_FOLDER : CreateFolderRuleHandler,
         # Add more rules as needed
     }
 

@@ -20,12 +20,15 @@ class CopyAllFilesRuleHandler(rh.RuleHandler):
             rule (Rule): Rule object dto
         """
         
-        # TODO: Replace static file paths with dynamic paths from rule
-        source_directory:str = "/home/hemanth/Desktop/Temp"
-        destination_directory:str ="/home/hemanth/Desktop/Temp1"
+        source_path:str = os.path.join(rule.source_location, rule.source_name) 
+        destination_path:str = os.path.join(rule.target_location, rule.target_name) 
         try:
         # Use shutil.copytree to recursively copy the entire directory and its contents
-            shutil.copytree(source_directory, destination_directory)
-            log.info(f"Directory '{source_directory}' successfully copied to '{destination_directory}'.")
+            shutil.copytree(source_path, destination_path)
+            log.info(f"Directory '{source_path}' successfully copied to '{destination_path}'.")
+        except FileNotFoundError:
+            log.exception(f"Source file '{source_path}' not found.")
+        except PermissionError:
+            log.exception(f"Permission denied to copy file.")
         except Exception as e:
-            log.error(f"An error occurred: {e}")
+            log.exception(f"An error occurred: {str(e)}")
