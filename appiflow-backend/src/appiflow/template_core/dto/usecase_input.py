@@ -1,14 +1,15 @@
 import json
-from json import JSONEncoder
-from types import SimpleNamespace as Namespace
 from template_core.dto.rule_param import RuleParam
+from pydantic.dataclasses import dataclass
+import dataclasses
+from pydantic.tools import parse_obj_as
 
+@dataclass
 class UsecaseInput:
     """DTO Class to represent inputs to a usecase.  
     """
-    def __init__(self, usecase_id, rule_param_mapping: RuleParam) -> None:
-        self.usecase_id = usecase_id
-        self.rule_param_mapping = rule_param_mapping
+    usecase_id : str
+    parameters : dict
     
     
     def from_json(self, object_json : str) -> 'UsecaseInput':
@@ -20,7 +21,8 @@ class UsecaseInput:
         Returns:
         UsecaseInput: Object representation of json
         """
-        return json.loads(object_json, object_hook = lambda d: Namespace(**d))
+        json_dict = json.loads(object_json)
+        return parse_obj_as(UsecaseInput, json_dict)
     
     def to_json(self) -> str:
         """Convert from object to json
@@ -28,11 +30,8 @@ class UsecaseInput:
         Returns:
             str: Json representation of object
         """
-        return json.dumps(self, indent=4, cls = UsecaseInputEncoder)
-        
+        return json.dumps(dataclasses.asdict(self))
     
-class UsecaseInputEncoder(JSONEncoder):
-        def default(self, o): return o.__dict__
 
 
 

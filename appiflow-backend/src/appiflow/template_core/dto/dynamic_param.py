@@ -1,15 +1,16 @@
 import json
-from json import JSONEncoder
-from types import SimpleNamespace as Namespace
+from pydantic.dataclasses import dataclass
+import dataclasses
+from pydantic.tools import parse_obj_as
 
+@dataclass
 class DynamicParam:
     """DTO Class to represent dynamic values of a parameter.  
     """
-    def __init__(self, param_name : str , param_value : str) -> None:
-        self.param_name = param_name
-        self.param_value = param_value
-    
-    
+    param_name : str
+    param_value : str
+
+        
     def from_json(self, object_json : str) -> 'DynamicParam':
         """Convert from json to object
 
@@ -19,7 +20,8 @@ class DynamicParam:
         Returns:
             DynamicParam: Object representation of json
         """
-        return json.loads(object_json, object_hook = lambda d: Namespace(**d))
+        json_dict = json.loads(object_json)
+        return parse_obj_as(DynamicParam, json_dict)
     
     def to_json(self) -> str:
         """Convert from object to json
@@ -27,11 +29,8 @@ class DynamicParam:
         Returns:
             str: Json representation of object
         """
-        return json.dumps(self, indent=4, cls = DynamicParamEncoder)
+        return json.dumps(dataclasses.asdict(self))
         
-    
-class DynamicParamEncoder(JSONEncoder):
-        def default(self, o): return o.__dict__
 
 
 

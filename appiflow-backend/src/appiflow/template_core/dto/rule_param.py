@@ -1,15 +1,16 @@
 import json
-from json import JSONEncoder
-from types import SimpleNamespace as Namespace
 from typing import List
 from template_core.dto.rule_param_detail import RuleParamDetail
+from pydantic.dataclasses import dataclass
+import dataclasses
+from pydantic.tools import parse_obj_as
 
+@dataclass
 class RuleParam:
     """DTO Class to represent parameters to a Rule.  
     """
-    def __init__(self, rule_name, rule_params : List[RuleParamDetail]) -> None:
-        self.rule_name = rule_name
-        self.rule_params = rule_params
+    rule_name : str
+    rule_params : List[RuleParamDetail]
     
     
     def from_json(self, object_json : str) -> 'RuleParam':
@@ -21,7 +22,8 @@ class RuleParam:
         Returns:
             Rule: Object representation of json
         """
-        return json.loads(object_json, object_hook = lambda d: Namespace(**d))
+        json_dict = json.loads(object_json)
+        return parse_obj_as(RuleParam, json_dict)
     
     def to_json(self) -> str:
         """Convert from object to json
@@ -29,11 +31,8 @@ class RuleParam:
         Returns:
             str: Json representation of object
         """
-        return json.dumps(self, indent=4, cls = RuleParamEncoder)
+        return json.dumps(dataclasses.asdict(self))
         
-    
-class RuleParamEncoder(JSONEncoder):
-        def default(self, o): return o.__dict__
 
 
 
