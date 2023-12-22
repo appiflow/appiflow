@@ -4,9 +4,11 @@ from template_core.template.copy_file_rule_handler import CopyFileRuleHandler
 from template_core.template.create_folder_rule_handler import CreateFolderRuleHandler
 from template_core.dto import rule_dto
 from template_core.dto.usecase_input import UsecaseInput
+from template_core.dto.usecase import Usecase
+from template_core.dto.usecase_param_detail import UsecaseParamDetail
+from template_core.template.usecase_handler import UsecaseHandler
 from template_core.dto.rule_param_detail import RuleParamDetail
 from template_core.dto.rule_param import RuleParam
-from template_core.dto.car_dto import Car, Wheel
 import json
 from pydantic.dataclasses import dataclass
 from pydantic.tools import parse_obj_as
@@ -17,7 +19,8 @@ def main():
     #test_copy_single()
     #test_pydantic()
     #test_use_input()
-    test_create_rule()
+    #test_create_rule()
+    test_use()
     
     
 def test_use_input():
@@ -28,6 +31,30 @@ def test_use_input():
     params = {"p1":"val"}
     ui : UsecaseInput = UsecaseInput(usecase_id="111", parameters= params)
     print(ui.to_json())
+    
+def test_use():
+    usecase_id ="111"
+    name = "test"
+    description = "testdescr"
+    ucpd = UsecaseParamDetail(param_name="p1", static_param_value="c1", dynamic_param_value=None)
+    usecase_params = []
+    usecase_params.append(ucpd)
+    rules = []
+    rule = rule_dto.Rule("1", 'test_rule', "COPY_SINGLE_FILE",'message.java', 'template_core/templates', 'output/', 'result.java')
+    rules.append(rule)
+    usecase_rule_param_map = {"p1":"v1"}
+    
+    
+    params = {"p1":"val"}
+    uc : Usecase = Usecase(usecase_id="111",  name= name, description=description, usecase_params=usecase_params, 
+                           rules=rules, usecase_rule_param_map= usecase_rule_param_map)
+    
+    params = {"p1":"val"}
+    uinput : UsecaseInput = UsecaseInput(usecase_id="111", parameters= params)
+    
+    uch: UsecaseHandler = UsecaseHandler()
+    uch.handle(uinput)
+    #print(uinput.to_json())    
     
     
 def test_create_rule():

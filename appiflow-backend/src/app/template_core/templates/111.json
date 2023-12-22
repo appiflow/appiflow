@@ -1,0 +1,56 @@
+{
+    "usecase_id": "111",
+    "name": "test",
+    "description": "testdescr",
+    "usecase_params": [
+      {
+        "param_name": "u_name",
+        "static_param_value": "copy rule",
+        "dynamic_param_value": null
+      },
+      {
+        "param_name": "u_type",
+        "static_param_value": "COPY_SINGLE_FILE",
+        "dynamic_param_value": null
+      },
+      {
+        "param_name": "u_source_name",
+        "static_param_value": "config.java",
+        "dynamic_param_value": null
+      },
+      {
+        "param_name": "u_source_location",
+        "static_param_value": "/projects",
+        "dynamic_param_value": null
+      },
+      {
+        "param_name": "u_target_location",
+        "static_param_value": "/targets",
+        "dynamic_param_value": null
+      },
+      {
+        "param_name": "u_target_name",
+        "static_param_value": "config_target.java",
+        "dynamic_param_value": null
+      }
+    ],
+    "rules": [
+      {
+        "id": "1",
+        "name": "test_rule",
+        "type": "COPY_SINGLE_FILE",
+        "source_name": "message.java",
+        "source_location": "template_core/templates",
+        "target_location": "output/",
+        "target_name": "result.java"
+      }
+    ],
+    "usecase_rule_param_map": {
+      "1_name": "u_name",
+      "1_type": "u_type",
+      "1_source_name": "u_source_name",
+      "1_source_location": "u_source_location",
+      "1_target_location": "u_target_location",
+      "1_target_name": "u_target_name"
+    }
+  }
