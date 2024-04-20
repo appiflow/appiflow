@@ -1,0 +1,20 @@
+{
+  "id": "applicantrequest",
+  "name": "Applicant Request Decision Workflow",
+  "version": "1.0",
+  "description": "Determine if applicant request is valid",
+  "specVersion": "0.8",
+  "start": "CheckApplication",
+  "states": [
+    {
+      "name": "CheckApplication",
+      "type": "inject",
+      "data": 
+        {
+          "result": "Hello Result"
+         
+        }
+     
+    }
+  ]
+}
