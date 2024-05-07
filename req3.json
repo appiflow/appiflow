@@ -12,6 +12,7 @@
       "actionMode": "sequential",
       "actions": [
         {
+          "name":"sendRejection",
           "functionRef": {
             "refName": "sendRejectionEmailFunction",
             "arguments": {

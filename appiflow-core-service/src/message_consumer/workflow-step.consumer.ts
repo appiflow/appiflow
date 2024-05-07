@@ -4,12 +4,14 @@ import { ProducerProxyService } from '../message_producer/producer.proxyservice'
 import { Specification } from '@severlessworkflow/sdk-typescript';
 import * as fs from 'fs';
 import { Logger } from '@nestjs/common';
+import { WorkflowStepService } from '../workflow_step/services/workflow_step.service';
 
 @Injectable()
 export class WorkflowStepConsumer implements OnModuleInit {
     private logger = new Logger('WorkflowStepConsumer'); 
     constructor(private readonly consumerService: ConsumerService, 
-        private readonly producerProxyService: ProducerProxyService) { }
+        private readonly producerProxyService: ProducerProxyService,
+        private readonly workflowStepService: WorkflowStepService) { }
     topic_name: string = "workflow-step-topic"
 
     async onModuleInit() { 
@@ -28,6 +30,7 @@ export class WorkflowStepConsumer implements OnModuleInit {
                     partition:partition.toString(),
                  })
                  //TODO update step status in DB
+                 //this.workflowStepService.updateStatus();
                  const workflow_json: string = fs.readFileSync('/Users/raghuveermb/Desktop/tech/workflow/code/appiflow/req3.json', 'utf8');
                  const workflow: Specification.Workflow = Specification.Workflow.fromSource(workflow_json);
                  const startState: string = message.value.toString()

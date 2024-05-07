@@ -12,12 +12,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { WorkflowInstanceModule } from './workflow_instance/workflow_instance.module';
 import { WorkflowInstance } from './workflow_instance/entities/workflow_instance.entity';
+import { WorkflowInstanceService } from './workflow_instance/services/workflow_instance.service';
 
 @Module({
   imports: [KafkaModule,  
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [ConfigModule, WorkflowInstanceService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         host: configService.get('DB_HOST'),
