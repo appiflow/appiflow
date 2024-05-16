@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { WorkflowApiController } from './controller/workflow_api.controller';
+import { WorkflowApiController } from './controllers/workflow_api.controller';
 import { WorkflowApiService } from './services/workflow_api.service';
 import { WorkflowInstanceService } from '../workflow_instance/services/workflow_instance.service';
 import { ProducerProxyService } from '../message_producer/producer.proxyservice';

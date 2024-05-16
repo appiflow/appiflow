@@ -12,7 +12,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import {MessageConsumerModule} from './message_consumer/message_consumer.module';
-import {WorkflowApiModule} from './workflow_api/workflow_api.module'
+import {WorkflowApiModule} from './workflow_execution/workflow_api.module'
 import path from 'path';
 
 import { WorkflowStepParams } from './workflow_step/entities/workflow_step_params.entity';
