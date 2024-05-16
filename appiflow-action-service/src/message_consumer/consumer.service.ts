@@ -2,6 +2,7 @@
 import { Injectable, OnApplicationShutdown, OnModuleInit } from "@nestjs/common";
 import { Consumer, ConsumerRunConfig, ConsumerSubscribeTopics, Kafka } from "kafkajs";
 
+
 @Injectable()
 export class ConsumerService implements OnApplicationShutdown {
   // Connect to Kafka Server TODO env var

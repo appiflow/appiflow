@@ -10,6 +10,7 @@ import { WorkflowStepService } from '../workflow_step/services/workflow_step.ser
 import { WorkflowInstanceParams } from '../workflow_instance/entities/workflow_instance_params.entity';
 import { WorkflowInstanceService } from '../workflow_instance/services/workflow_instance.service';
 import { v4 } from "uuid";
+import {Message, toJson} from "../common/models/message.model";
 
 @Injectable()
 export class WorkflowConsumer implements OnModuleInit {
@@ -23,6 +24,7 @@ export class WorkflowConsumer implements OnModuleInit {
     async onModuleInit() { 
 
         // Consume Data with Spcific topic
+        console.log("Initializing workflow consumer")
 
         await this.consumerService.consume(
             "workflow-topic",
@@ -31,18 +33,20 @@ export class WorkflowConsumer implements OnModuleInit {
                 eachMessage: async({ topic, partition, message })=>{
                  this.logger.log("Consuming from workflow-topic")
                  this.logger.log({
-                    value:message.value.toString(),
+                    msgString:message.value.toString(),
                     topic:topic.toString(),
                     partition:partition.toString(),
                  })
-                 const workflow_json: string = fs.readFileSync('/Users/raghuveermb/Desktop/tech/workflow/code/appiflow/req3.json', 'utf8');
+    
                  //TODO Message parse
-                 const workflowInstanceId = "";
-                 const workflowDefnJson: string = (await this.workflowInstanceService.getParamById(workflowInstanceId)).workflow_definition
+                 const msg: Message = toJson(message.value.toString()) as Message
                  
-                 const workflow: Specification.Workflow = Specification.Workflow.fromSource(workflow_json);
+                 const workflowInstanceId = msg.workflowInstanceId;
+                 const workflowDefnJson: string = (await this.workflowInstanceService.getParamById(workflowInstanceId)).workflow_definition
+                 this.logger.log("In workflow-topic consumer workflowInstanceId: "+workflowInstanceId )
+                 const workflow: Specification.Workflow = Specification.Workflow.fromSource(workflowDefnJson);
                  const startState: string = workflow.start.toString()
-                 const workflow_step_id: string = "";
+                 
                  //TODO create step in DB
                  const wfStep: WorkflowStep = new WorkflowStep()
                  wfStep.workflow_step_id = v4();
@@ -51,9 +55,13 @@ export class WorkflowConsumer implements OnModuleInit {
                  //TODO Update status in DB
                  //this.workflowStepService.updateStatus(wfStep.workflow_step_id, )
                  this.logger.log("start state ${startState}")
+                 const publishMessage: Message = new Message()
+                 publishMessage.workflowInstanceId = msg.workflowInstanceId
+                 publishMessage.workflowStepId = wfStep.workflow_step_id 
+                 publishMessage.status = wfStep.status
+                 publishMessage.workflowStepName =startState
                  //push message
-                 const publish_message: string = startState
-                 this.producerProxyService.produce_step_message(publish_message)
+                 this.producerProxyService.produce_step_message(publishMessage)
 
                 }
 

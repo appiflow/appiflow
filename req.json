@@ -28,7 +28,13 @@
       "type": "operation",
       "actions": [
         {
-          "subFlowRef": "startApplicationWorkflowId"
+          "name":"startApp",
+          "functionRef": {
+            "refName": "sendRejectionEmailFunction",
+            "arguments": {
+              "applicant": "${ .applicant }"
+            }
+          }
         }
       ],
       "end": true
@@ -39,6 +45,7 @@
       "actionMode": "sequential",
       "actions": [
         {
+          "name":"rejectApp",
           "functionRef": {
             "refName": "sendRejectionEmailFunction",
             "arguments": {

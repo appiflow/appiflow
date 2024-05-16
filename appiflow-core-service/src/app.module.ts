@@ -10,31 +10,46 @@ import { WorkflowStepActionStatusConsumer } from './message_consumer/step-action
 import { configService } from './config/config.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { WorkflowInstanceModule } from './workflow_instance/workflow_instance.module';
+
+import {MessageConsumerModule} from './message_consumer/message_consumer.module';
+import {WorkflowApiModule} from './workflow_api/workflow_api.module'
+import path from 'path';
+
+import { WorkflowStepParams } from './workflow_step/entities/workflow_step_params.entity';
+import { WorkflowStep } from './workflow_step/entities/workflow_step.entity';
+import { WorkflowInstanceParams } from './workflow_instance/entities/workflow_instance_params.entity';
 import { WorkflowInstance } from './workflow_instance/entities/workflow_instance.entity';
-import { WorkflowInstanceService } from './workflow_instance/services/workflow_instance.service';
+import { WorkflowActionParams } from './workflow_action/entities/workflow_action_params.entity';
+import { WorkflowAction } from './workflow_action/entities/workflow_action.entity';
+import {WorkflowStepModule} from './workflow_step/workflow_step.module'
+import {WorkflowInstanceModule} from './workflow_instance/workflow_instance.module'
+import {WorkflowActionModule} from './workflow_action/workflow_action.module'
 
 @Module({
-  imports: [KafkaModule,  
+  imports: [KafkaModule,  MessageConsumerModule, WorkflowApiModule, WorkflowStepModule,  WorkflowInstanceModule, WorkflowActionModule,
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule, WorkflowInstanceService],
+      imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         host: configService.get('DB_HOST'),
         port: +configService.get<number>('DB_PORT'),
-        username: configService.get('DB_USERNAME'),
-        password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_NAME'),
-        entities: [WorkflowInstance],
+        username: configService.get('POSTGRES_USER'),
+        password: configService.get('POSTGRES_PASSWORD'),
+        database:  configService.get('POSTGRES_DATABASE'),
+        entities: [WorkflowStepParams, WorkflowStep, WorkflowInstanceParams,
+          WorkflowInstance, WorkflowActionParams, WorkflowAction],
+        //autoLoadEntities: true,
         synchronize: true,
+        logging: ["query", "error"]
       }),
+      
       inject: [ConfigService],
-    }),
-    WorkflowInstanceModule
+    })
   ],
   controllers: [AppController],
-  providers: [AppService, ProducerProxyService, WorkflowConsumer, WorkflowStepConsumer, WorkflowStepActionStatusConsumer
+  providers: [AppService, ProducerProxyService, 
+    //WorkflowConsumer, WorkflowStepConsumer, WorkflowStepActionStatusConsumer
     //, WorkflowStepConsumer, WorkflowStepActionStatusConsumer
     //, TestConsumer
    ],

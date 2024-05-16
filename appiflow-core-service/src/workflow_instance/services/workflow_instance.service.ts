@@ -18,12 +18,12 @@ export class WorkflowInstanceService {
     return await this.params_repo.findOneBy({workflow_instance_id: id});
   }
 
-  public async create(workflowInstance: WorkflowInstance) {
-    return this.repo.create(workflowInstance);
+  public async create(workflowInstance: WorkflowInstance): Promise<WorkflowInstance> {
+    return this.repo.save(workflowInstance);
   }
 
   public async createParams(workflowInstanceParams: WorkflowInstanceParams) {
-    return this.params_repo.create(workflowInstanceParams);
+    return this.params_repo.save(workflowInstanceParams);
   }
 
   public async updateStatus(status: string, id: string) {

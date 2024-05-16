@@ -1,16 +1,14 @@
 import { Controller, Get } from '@nestjs/common';
-
-
 import { WorkflowInstanceService } from '../services/workflow_instance.service';
 
-@Controller('workflowinstances')
+@Controller('WorkflowActions')
 export class  WorkflowInstanceController {
   constructor(
-    private readonly workflowInstanceService: WorkflowInstanceService) {}
+    private readonly WorkflowInstanceService: WorkflowInstanceService) {}
 
 
   @Get()
   public async getAll() {
-    return await this.workflowInstanceService.getAll();
+    return await this.WorkflowInstanceService.getAll();
   }
 }

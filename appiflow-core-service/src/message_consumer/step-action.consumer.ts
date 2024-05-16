@@ -32,6 +32,8 @@ export class WorkflowStepActionConsumer implements OnModuleInit {
                 publishMessage.status = "Completed"
                 publishMessage.workflowStepName =msg.workflowActionName
                 publishMessage.workflowActionId = msg.workflowActionId
+                publishMessage.workflowStepName = msg.workflowStepName
+                publishMessage.workflowActionName = msg.workflowActionName
                  this.producerProxyService.produce_action_status_message(publishMessage)
                 }
 
