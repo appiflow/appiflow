@@ -1,0 +1,6 @@
+export enum Status{
+    INITIATED = "INITIATED",
+    IN_PROGRESS = "IN_PROGRESS",
+    COMPLETED = "COMPLETED",
+    FAILED = "FAILED"
+  }

@@ -10,6 +10,7 @@ import * as fs from 'fs';
 import { Controller, Get } from '@nestjs/common';
 import { WorkflowStepService } from '../../workflow_step/services/workflow_step.service';
 import { WorkflowStepParams } from '../../workflow_step/entities/workflow_step_params.entity';
+import {Status} from "../../common/core/common_enums";
 
 @Injectable()
 export class  WorkflowApiService {
@@ -22,13 +23,13 @@ export class  WorkflowApiService {
     //TODO Save to DB
     const wfInstance: WorkflowInstance = new WorkflowInstance()
     wfInstance.workflow_instance_id = workflow_instance_id
-    wfInstance.status = "INITIATED"
+    wfInstance.status = Status.INITIATED.toString()
     wfInstance.createdBy = "USER"
     wfInstance.lastChangedBy = "USER"
     const wfInstanceNew: WorkflowInstance = await this.workflowInstanceService.create(wfInstance);
     console.log("Inserted id " + wfInstanceNew.id)
     //TODO remove hardcoding
-    const workflow_json: string = fs.readFileSync('/Users/raghuveermb/Desktop/tech/workflow/code/repo/appiflow/req.json', 'utf8');
+    const workflow_json: string = fs.readFileSync('/Users/raghuveermb/Desktop/tech/workflow/code/repo/appiflow/booklending.json', 'utf8');
     const workflowInstanceParams: WorkflowInstanceParams = new WorkflowInstanceParams()
     workflowInstanceParams.workflow_instance_id = workflow_instance_id
     workflowInstanceParams.workflow_definition = workflow_json

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { WorkflowApiService } from '../services/workflow_api.service';
+import { WorkflowApiService } from '../services/workflow_execution.service';
 import * as fs from 'fs';
 import { Controller, Get } from '@nestjs/common';
 

@@ -13,6 +13,8 @@ import { WorkflowActionService } from '../workflow_action/services/workflow_acti
 import { WorkflowAction } from '../workflow_action/entities/workflow_action.entity';
 import { WorkflowActionParams } from '../workflow_action/entities/workflow_action_params.entity';
 import { v4 } from "uuid";
+import {Status} from "../common/core/common_enums";
+import {HandlerUtil} from "./handler_util";
 
 @Injectable()
 export class WorkflowStepConsumer implements OnModuleInit {
@@ -51,34 +53,10 @@ export class WorkflowStepConsumer implements OnModuleInit {
                  //this.workflowStepService.updateStatus();
                  const workflowSdk = new WorkflowSdkUtil(workflowDefnJson);
                  const result: HandlerResult = workflowSdk.handle_step( msg.workflowStepName);
+                 const handler: HandlerUtil = new HandlerUtil(this.producerProxyService, this.workflowStepService, 
+                    this.workflowActionService);
+                 handler.handle_workflow(workflowInstanceId, result, msg)
                 
-                 if(result.type == ResultType.STEP){
-                    const wfStep: WorkflowStep = new WorkflowStep()
-                    wfStep.workflow_step_id = v4();
-                    wfStep.status = "INITIATED"
-                    this.workflowStepService.create(wfStep);
-                    const publishMessage: Message = new Message()
-                    publishMessage.workflowInstanceId = msg.workflowInstanceId
-                    publishMessage.workflowStepId = wfStep.workflow_step_id 
-                    publishMessage.status = wfStep.status
-                    publishMessage.workflowStepName =result.stepName
-                    this.logger.log("publishing step message: " + publishMessage)
-                    this.producerProxyService.produce_step_message(publishMessage)
-                 }
-                 else if(result.type == ResultType.ACTION){
-                    const workflowAction: WorkflowAction = new WorkflowAction()
-                    workflowAction.workflow_action_id = v4();
-                    workflowAction.status = "INITIATED"
-                    this.workflowActionService.create(workflowAction)
-                    const publishMessage: Message = new Message()
-                    publishMessage.workflowInstanceId = msg.workflowInstanceId
-                    publishMessage.workflowStepId = msg.workflowStepId 
-                    publishMessage.status = workflowAction.status
-                    publishMessage.workflowStepName =result.stepName
-                    publishMessage.workflowActionId = workflowAction.workflow_action_id
-                    publishMessage.workflowActionName = result.actionName
-                    this.producerProxyService.produce_action_message(publishMessage)
-                 }
                 
                 }
 

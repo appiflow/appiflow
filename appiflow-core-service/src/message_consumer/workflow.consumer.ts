@@ -11,6 +11,7 @@ import { WorkflowInstanceParams } from '../workflow_instance/entities/workflow_i
 import { WorkflowInstanceService } from '../workflow_instance/services/workflow_instance.service';
 import { v4 } from "uuid";
 import {Message, toJson} from "../common/models/message.model";
+import {Status} from "../common/core/common_enums";
 
 @Injectable()
 export class WorkflowConsumer implements OnModuleInit {
@@ -50,7 +51,7 @@ export class WorkflowConsumer implements OnModuleInit {
                  //TODO create step in DB
                  const wfStep: WorkflowStep = new WorkflowStep()
                  wfStep.workflow_step_id = v4();
-                 wfStep.status = "INITIATED"
+                 wfStep.status = Status.INITIATED.toString()
                 this.workflowStepService.create(wfStep);
                  //TODO Update status in DB
                  //this.workflowStepService.updateStatus(wfStep.workflow_step_id, )

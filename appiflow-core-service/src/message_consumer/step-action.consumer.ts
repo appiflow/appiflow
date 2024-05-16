@@ -2,6 +2,7 @@ import { Injectable, OnModuleInit } from "@nestjs/common";
 import { ConsumerService } from "./consumer.service";
 import { ProducerProxyService } from '../message_producer/producer.proxyservice';
 import {Message, toJson} from "../common/models/message.model";
+import {Status} from "../common/core/common_enums";
 
 @Injectable()
 export class WorkflowStepActionConsumer implements OnModuleInit {
@@ -29,7 +30,7 @@ export class WorkflowStepActionConsumer implements OnModuleInit {
                  const publishMessage: Message = new Message()
                 publishMessage.workflowInstanceId = msg.workflowInstanceId
                 publishMessage.workflowStepId = msg.workflowStepId 
-                publishMessage.status = "Completed"
+                publishMessage.status = Status.COMPLETED.toString()
                 publishMessage.workflowStepName =msg.workflowActionName
                 publishMessage.workflowActionId = msg.workflowActionId
                 publishMessage.workflowStepName = msg.workflowStepName

@@ -13,6 +13,8 @@ import { WorkflowActionService } from '../workflow_action/services/workflow_acti
 import { WorkflowAction } from '../workflow_action/entities/workflow_action.entity';
 import { WorkflowActionParams } from '../workflow_action/entities/workflow_action_params.entity';
 import { v4 } from "uuid";
+import {Status} from "../common/core/common_enums";
+import {HandlerUtil} from "./handler_util";
 
 @Injectable()
 export class WorkflowStepActionStatusConsumer implements OnModuleInit {
@@ -56,10 +58,15 @@ export class WorkflowStepActionStatusConsumer implements OnModuleInit {
                 
                  const result: HandlerResult = workflowSdk.handle_action( msg.workflowStepName, msg.workflowActionName);
                  this.logger.log("Result after handler is : "+ result.toString())
-                 if(result.type == ResultType.STEP){
+
+                 const handler: HandlerUtil = new HandlerUtil(this.producerProxyService, this.workflowStepService, 
+                    this.workflowActionService);
+                 handler.handle_workflow(workflowInstanceId, result, msg)
+
+                 /* if(result.type == ResultType.STEP){
                     const wfStep: WorkflowStep = new WorkflowStep()
                     wfStep.workflow_step_id = v4();
-                    wfStep.status = "INITIATED"
+                    wfStep.status = Status.INITIATED.toString()
                     this.workflowStepService.create(wfStep);
                     const publishMessage: Message = new Message()
                     publishMessage.workflowInstanceId = msg.workflowInstanceId
@@ -71,7 +78,7 @@ export class WorkflowStepActionStatusConsumer implements OnModuleInit {
                  else if(result.type == ResultType.ACTION){
                     const workflowAction: WorkflowAction = new WorkflowAction()
                     workflowAction.workflow_action_id = v4();
-                    workflowAction.status = "INITIATED"
+                    workflowAction.status = Status.INITIATED.toString()
                     this.workflowActionService.create(workflowAction)
                     const publishMessage: Message = new Message()
                     publishMessage.workflowInstanceId = msg.workflowInstanceId
@@ -83,7 +90,7 @@ export class WorkflowStepActionStatusConsumer implements OnModuleInit {
                  }
                  else if(result.type == ResultType.END){
                     this.logger.log("End of workflow for workflowInstanceId: "+workflowInstanceId)
-                }
+                } */
                 }
 
             }
