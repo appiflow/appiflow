@@ -14,11 +14,18 @@ export class WorkflowStepService {
   }
 
   public async create(workflowStep: WorkflowStep) {
-    return this.repo.create(workflowStep);
+    return this.repo.save(workflowStep);
   }
 
   public async createParams(workflowStepParams: WorkflowStepParams) {
-    return this.params_repo.create(workflowStepParams);
+    return this.params_repo.save(workflowStepParams);
+  }
+  public async getParamsById(stepId: string) {
+    return this.params_repo.findOneBy({workflow_step_id: stepId});
+  }
+
+  public async updateOutputParam(output_param: string, stepId: string) {
+    return this.params_repo.update({workflow_step_id: stepId}, {output_params: output_param});
   }
 
   public async updateStatus(status: string, id: string) {

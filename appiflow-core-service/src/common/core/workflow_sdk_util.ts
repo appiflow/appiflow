@@ -10,6 +10,7 @@ import {
   transitiondataconditionBuilder,
   workflowBuilder
 } from '@severlessworkflow/sdk-typescript';
+const rule_handler = require('./rule_handler');
 
 export class ActionMessage{
   step_name: string;
@@ -41,8 +42,10 @@ export class HandlerResult{
 
 export class WorkflowSdkUtil{
     workflow: Specification.Workflow | null;
-    constructor(workflowJson: string){
+    inputParams: string;
+    constructor(workflowJson: string, inputParams: string){
         this.workflow = Specification.Workflow.fromSource(workflowJson);
+        this.inputParams = inputParams;
     }
 
   step_queue: string[] = []
@@ -227,7 +230,7 @@ export class WorkflowSdkUtil{
     
   }
 
-  handle_step(stepName: string){
+  async handle_step(stepName: string){
     const matchingState = this.getStepByName(stepName)
     const result: HandlerResult = new HandlerResult();
     
@@ -241,12 +244,17 @@ export class WorkflowSdkUtil{
         result.type = ResultType.ACTION
     }
     else if (matchingState instanceof Specification.Databasedswitchstate){
-      const triggeringStepName: string = this.getTriggeringStepName(matchingState)
-     
-      //TODO publish step
-      this.publish_step(triggeringStepName);
-      result.stepName = triggeringStepName
-      result.type = ResultType.STEP
+      const triggeringStepName: string = await this.getTriggeringStepName(matchingState)
+      if(triggeringStepName == null){
+        result.type = ResultType.END
+      }
+      else{
+        //TODO publish step
+        this.publish_step(triggeringStepName);
+        result.stepName = triggeringStepName
+        result.type = ResultType.STEP
+      }
+      
     }
     else if (matchingState instanceof Specification.Parallelstate){
       const actions = this.getParallelActions(matchingState)
@@ -274,33 +282,53 @@ export class WorkflowSdkUtil{
     return []
   }
 
-  getTriggeringStepName(step){
+  async getTriggeringStepName(step){
     const dbStep: Specification.Databasedswitchstate = step as Specification.Databasedswitchstate;
     const conditions = dbStep.dataConditions
     var triggeringStepName: string | null = null;
-    conditions.forEach(element => {
-      if(element instanceof Specification.Transitiondatacondition){
-        const condition:  Specification.Transitiondatacondition = element as Specification.Transitiondatacondition
-        // TODO evaluate condition.condition
-        if( typeof condition.transition === "string"){
-          triggeringStepName = condition.transition.toString()
+    //conditions.forEach(element => {
+      for(const element of conditions ){
+        if(element instanceof Specification.Transitiondatacondition){
+          const condition:  Specification.Transitiondatacondition = element as Specification.Transitiondatacondition
+          // TODO evaluate condition.condition
+          if( typeof condition.transition === "string"){
+            if(await this.evaluate_condition(condition.condition, this.inputParams)){
+              console.log("Conditional evaluation true")
+              triggeringStepName = condition.transition.toString();
+              break;
+            }
+            
+          }
+          else if( condition.transition instanceof Specification.Transition){
+            const transition:Specification.Transition = condition.transition as Specification.Transition
+            //TODO handle producing events
+            triggeringStepName = transition.nextState
+          }
         }
-        else if( condition.transition instanceof Specification.Transition){
-          const transition:Specification.Transition = condition.transition as Specification.Transition
-          //TODO handle producing events
-          triggeringStepName = transition.nextState
-        }
-      }
-    });
+    };
     if(triggeringStepName == null){
       const condition: Specification.Defaultconditiondef = dbStep.defaultCondition as Specification.Defaultconditiondef
-      const transition:Specification.Transition = condition.transition as Specification.Transition
-      //TODO handle producing events
-      triggeringStepName = transition.nextState
+      if(condition.transition == null){
+        if(condition.end == "true"){
+          console.log("End of workflow")
+        }
+      }
+      else{
+        const transition:Specification.Transition = condition.transition as Specification.Transition
+        //TODO handle producing events
+        triggeringStepName = transition.nextState
+      }
+      
     }
     return triggeringStepName;
   }
 
+  async evaluate_condition(filter, param_json){
+    console.log("evaluating condition: "+ filter + " params: "+ param_json)
+    var result = await rule_handler.process_rule(filter, param_json);
+    console.log("evaluating condition: output is "+ result)
+    return (result == "true");
+  }
 
 
 
@@ -315,7 +343,7 @@ export class WorkflowSdkUtil{
     for(let idx=1;idx<=count;idx++){
         const stepName = this.consume_step()!;
         if(stepName != null){
-          this.handle_step( stepName);
+          await this.handle_step( stepName);
         }
         const actionMessage = this.consume_action();
         if(actionMessage != null){
@@ -325,12 +353,14 @@ export class WorkflowSdkUtil{
     }
   }
 
+
+
 }
 
 
 function greeter(person: string) {
   const json = this.getWf()
-  const util: WorkflowSdkUtil = new WorkflowSdkUtil(json)
+  const util: WorkflowSdkUtil = new WorkflowSdkUtil(json, null)
   util.test_flow();
 }
 

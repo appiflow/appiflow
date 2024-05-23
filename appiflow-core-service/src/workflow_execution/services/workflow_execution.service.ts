@@ -11,6 +11,9 @@ import { Controller, Get } from '@nestjs/common';
 import { WorkflowStepService } from '../../workflow_step/services/workflow_step.service';
 import { WorkflowStepParams } from '../../workflow_step/entities/workflow_step_params.entity';
 import {Status} from "../../common/core/common_enums";
+//import {process_rule} from "../../common/core/rule_handler"
+const rule_handler = require('../../common/core/rule_handler');
+import { WorkflowInstanceDTO } from '../models/workflow_instance_dto';
 
 @Injectable()
 export class  WorkflowApiService {
@@ -18,7 +21,18 @@ export class  WorkflowApiService {
     private readonly workflowInstanceService: WorkflowInstanceService,
     private readonly workflowStepService: WorkflowStepService){}
 
-  async start() {
+    async start(){
+
+    }
+
+  async create_wf_instance(workflowInstanceDTO: WorkflowInstanceDTO) {
+    //var filter = "${.applicant | .gender == \"male\"}"
+    //var data_json = "{\"applicant\": {\"age\": 25,\"gender\": \"male\",\"name\": \"John\"}}";
+    var wf_params = workflowInstanceDTO.params;
+   
+    //var result = await rule_handler.process_rule(filter, data_json)
+    //console.log("result from await is -> "+ result)
+    
     const workflow_instance_id: string = v4();
     //TODO Save to DB
     const wfInstance: WorkflowInstance = new WorkflowInstance()
@@ -33,7 +47,7 @@ export class  WorkflowApiService {
     const workflowInstanceParams: WorkflowInstanceParams = new WorkflowInstanceParams()
     workflowInstanceParams.workflow_instance_id = workflow_instance_id
     workflowInstanceParams.workflow_definition = workflow_json
-    workflowInstanceParams.input_params = "<input_params>"
+    workflowInstanceParams.input_params = wf_params
     workflowInstanceParams.createdBy = "USER"
     workflowInstanceParams.lastChangedBy = "USER"
    this.workflowInstanceService.createParams(workflowInstanceParams)

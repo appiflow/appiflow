@@ -28,6 +28,7 @@ export class ProducerProxyService {
               value: message.toString()
             }]
           })
+          this.logger.log("producing step msg")
     }
 
     async produce_action_message(message: Message) {

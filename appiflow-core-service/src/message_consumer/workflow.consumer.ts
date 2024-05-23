@@ -9,6 +9,7 @@ import { WorkflowStep } from '../workflow_step/entities/workflow_step.entity';
 import { WorkflowStepService } from '../workflow_step/services/workflow_step.service';
 import { WorkflowInstanceParams } from '../workflow_instance/entities/workflow_instance_params.entity';
 import { WorkflowInstanceService } from '../workflow_instance/services/workflow_instance.service';
+import { WorkflowStepParams } from '../workflow_step/entities/workflow_step_params.entity';
 import { v4 } from "uuid";
 import {Message, toJson} from "../common/models/message.model";
 import {Status} from "../common/core/common_enums";
@@ -43,7 +44,8 @@ export class WorkflowConsumer implements OnModuleInit {
                  const msg: Message = toJson(message.value.toString()) as Message
                  
                  const workflowInstanceId = msg.workflowInstanceId;
-                 const workflowDefnJson: string = (await this.workflowInstanceService.getParamById(workflowInstanceId)).workflow_definition
+                 const instanceParams: WorkflowInstanceParams = (await this.workflowInstanceService.getParamById(workflowInstanceId))
+                 const workflowDefnJson: string = instanceParams.workflow_definition
                  this.logger.log("In workflow-topic consumer workflowInstanceId: "+workflowInstanceId )
                  const workflow: Specification.Workflow = Specification.Workflow.fromSource(workflowDefnJson);
                  const startState: string = workflow.start.toString()
@@ -52,7 +54,19 @@ export class WorkflowConsumer implements OnModuleInit {
                  const wfStep: WorkflowStep = new WorkflowStep()
                  wfStep.workflow_step_id = v4();
                  wfStep.status = Status.INITIATED.toString()
-                this.workflowStepService.create(wfStep);
+                 wfStep.workflow_instance_id = workflowInstanceId
+                 wfStep.step_name = startState
+                 wfStep.createdBy = "USER"
+                 wfStep.lastChangedBy = "USER"
+                const wfStepCreated = await this.workflowStepService.create(wfStep);
+                this.logger.log("step created "+ wfStepCreated.workflow_step_id)
+                //create step params
+                const wfStepParams: WorkflowStepParams = new WorkflowStepParams();
+                wfStepParams.workflow_step_id = wfStep.workflow_step_id
+                wfStepParams.createdBy = "USER"
+                wfStepParams.lastChangedBy = "USER"
+                wfStepParams.input_params = instanceParams.input_params
+                await this.workflowStepService.createParams(wfStepParams);
                  //TODO Update status in DB
                  //this.workflowStepService.updateStatus(wfStep.workflow_step_id, )
                  this.logger.log("start state ${startState}")

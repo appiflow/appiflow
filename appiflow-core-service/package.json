@@ -58,7 +58,8 @@
     "typescript": "^5.1.3",
     "uuid": "^9.0.1",
     "@nestjs/config":"^3.2.2",
-    "@nestjs/microservices":"^10.3.8"
+    "@nestjs/microservices":"^10.3.8",
+    "node-jq":"^4.3.2"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -82,7 +83,6 @@
     "module": "commonjs",
     "outDir": "build",
     "rootDir": "src",
-    "strict": true,
     "strictPropertyInitialization": false,
     "esModuleInterop": true,
     "experimentalDecorators": true, 

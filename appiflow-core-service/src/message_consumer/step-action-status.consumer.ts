@@ -12,6 +12,7 @@ import { WorkflowSdkUtil, HandlerResult, ResultType } from '../common/core/workf
 import { WorkflowActionService } from '../workflow_action/services/workflow_action.service';
 import { WorkflowAction } from '../workflow_action/entities/workflow_action.entity';
 import { WorkflowActionParams } from '../workflow_action/entities/workflow_action_params.entity';
+import { WorkflowStepParams } from '../workflow_step/entities/workflow_step_params.entity';
 import { v4 } from "uuid";
 import {Status} from "../common/core/common_enums";
 import {HandlerUtil} from "./handler_util";
@@ -54,14 +55,17 @@ export class WorkflowStepActionStatusConsumer implements OnModuleInit {
                
                  //TODO update step status in DB
                  //this.workflowStepService.updateStatus();
-                 const workflowSdk = new WorkflowSdkUtil(workflowDefnJson);
+                 const workflowStepParams: WorkflowStepParams = await this.workflowStepService.getParamsById(msg.workflowStepId);
+                 const stepOutputParams: string = workflowStepParams.output_params
+                 const workflowSdk = new WorkflowSdkUtil(workflowDefnJson, stepOutputParams);
+                 
                 
                  const result: HandlerResult = workflowSdk.handle_action( msg.workflowStepName, msg.workflowActionName);
                  this.logger.log("Result after handler is : "+ result.toString())
 
                  const handler: HandlerUtil = new HandlerUtil(this.producerProxyService, this.workflowStepService, 
                     this.workflowActionService);
-                 handler.handle_workflow(workflowInstanceId, result, msg)
+                 handler.handle_workflow(workflowInstanceId, result, msg, workflowStepParams)
 
                  /* if(result.type == ResultType.STEP){
                     const wfStep: WorkflowStep = new WorkflowStep()
