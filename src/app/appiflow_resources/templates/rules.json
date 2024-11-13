@@ -1,0 +1,22 @@
+{
+  "all_rules": [
+  {
+    "id": "1",
+    "name": "test_rule",
+    "type": "COPY_SINGLE_FILE",
+    "source_name": "",
+    "source_location": "",
+    "target_location": "",
+    "target_name": ""
+  },
+  {
+    "id": "2",
+    "name": "test_rule",
+    "type": "CREATE_CONTENT",
+    "source_name": "<DEFAULT>",
+    "source_location": "",
+    "target_location": "",
+    "target_name": ""
+  }
+  ]    
+}

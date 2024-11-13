@@ -1,0 +1,39 @@
+{
+    "usecase_id": "2",
+    "name": "test",
+    "description": "testdescr",
+    "usecase_params": [
+      
+      {
+        "param_name": "u_source_name",
+        "static_param_value": "email_validator.java",
+        "dynamic_param_value": null
+      },
+      {
+        "param_name": "u_source_location",
+        "static_param_value": "/Users/raghuveermb/Desktop/lc/appiflow/testfiles/source",
+        "dynamic_param_value": null
+      },
+      {
+        "param_name": "u_target_location",
+        "static_param_value": "/Users/raghuveermb/Desktop/lc/appiflow/testfiles/dest",
+        "dynamic_param_value": null
+      },
+      {
+        "param_name": "u_target_name",
+        "static_param_value": "config_target.java",
+        "dynamic_param_value": null
+      }
+    ],
+    "rule_refs": [
+      "2"
+    ],
+    "usecase_rule_param_map": {
+      "2_name": "u_name",
+      "2_type": "u_type",
+      "2_source_name": "u_source_name",
+      "2_source_location": "u_source_location",
+      "2_target_location": "u_target_location",
+      "2_target_name": "u_target_name"
+    }
+  }
